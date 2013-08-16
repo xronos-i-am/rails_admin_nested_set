@@ -22,12 +22,12 @@ module RailsAdmin
           Proc.new do |klass|
             @nested_set_conf = ::RailsAdminNestedSet::Configuration.new @abstract_model
 
-            if params['id'].present?
+            if request.post?
               begin
-                id        = params[:id].to_s
-                parent_id = params[:parent_id].to_s
-                prev_id   = params[:prev_id].to_s
-                next_id   = params[:next_id].to_s
+                id        = params[:node_id].to_s
+                parent_id = params[:parent_node_id].to_s
+                prev_id   = params[:prev_node_id].to_s
+                next_id   = params[:next_node_id].to_s
 
                 if id.empty?
                   return render text: 'Nested set UI error: node id not defined', status: 500

@@ -5,10 +5,9 @@ module RailsAdminNestedSet
       roots = tree.select{|elem| elem.parent_id.nil?}
       id = "ns_#{rand(100_000_000..999_999_999)}"
       content = content_tag(:ol, rails_admin_nested_set_builder(roots, tree), id: id, class: 'dd-list')
-      js = "rails_admin_nested_set({id: '#{id}', max_depth: #{max_depth}, update_url: '#{nested_set_path(model_name: @abstract_model)}'});"
+      js = "rails_admin_nested_set({id: '#{id}', max_depth: #{max_depth}, update_url: '#{update_url}'});"
       content + content_tag(:script, js.html_safe, type: 'text/javascript')
     end
-
 
     def rails_admin_nested_set_builder(nodes, tree)
       nodes.map do |node|
@@ -18,8 +17,8 @@ module RailsAdminNestedSet
 
           output = content_tag :div, 'drag', class: 'dd-handle dd3-handle'
           output+= content_tag :div, class: 'dd3-content' do
-            content = link_to @model_config.with(object: node).object_label, edit_path(@abstract_model, node.id)
-            content + content_tag(:div, action_links(node), class: 'pull-right links')
+            content = link_to @nested_set_conf.object_label( node ), edit_node_path( node )
+            content + content_tag(:div, action_links( node ), class: 'pull-right links')
           end
 
           children = tree.select{|elem| elem.parent_id == node.id}
@@ -36,9 +35,17 @@ module RailsAdminNestedSet
       @nested_set_conf.options[:max_depth] || '0'
     end
 
-    def action_links(model)
+    def update_url
+      @nested_set_conf.update_url[ self ]
+    end
+
+    def edit_node_path( node )
+      @nested_set_conf.edit_path[ self, node ]
+    end
+
+    def action_links( node )
       content_tag :ul, class: 'inline actions' do
-        menu_for :member, @abstract_model, model, true
+        @nested_set_conf.inline_menu[ self, node ]
       end
     end
   end

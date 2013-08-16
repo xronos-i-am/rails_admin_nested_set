@@ -25,10 +25,10 @@ window.rails_admin_nested_set = (tree_config) ->
           dataType: "html"
           url: tree_config["update_url"]
           data:
-            id: ui.item.data("id")
-            parent_id: ui.item.parent().parent().data("id")
-            prev_id: ui.item.prev().data("id")
-            next_id: ui.item.next().data("id")
+            node_id: ui.item.data("id")
+            parent_node_id: ui.item.parent().parent().data("id")
+            prev_node_id: ui.item.prev().data("id")
+            next_node_id: ui.item.next().data("id")
 
           error: (xhr, status, error) ->
             show_flash('Nested Set: fatal error')
